@@ -1,5 +1,5 @@
 import { createMiddleware } from '@solidjs/start/middleware';
-import { getSession, getUserId } from './api/session';
+import { getUserId } from './api/session';
 import { redirect } from '@solidjs/router';
 
 export default createMiddleware({
