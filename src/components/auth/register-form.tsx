@@ -1,6 +1,7 @@
 import { loginOrRegister } from '~/api/auth';
 import { Button } from '../ui/button';
 import { TextFieldLabel, TextFieldInput, TextField } from '../ui/text-field';
+import { useSubmission } from '@solidjs/router';
 
 type Props = {
   showPassword: boolean;
@@ -9,6 +10,7 @@ type Props = {
 
 const RegisterForm = (props: Props) => {
   const showPassword = () => props.showPassword;
+  const loggingIn = useSubmission(loginOrRegister);
   return (
     <form method="post" action={loginOrRegister}>
       <input type="hidden" name="intent" value="register" />
@@ -47,7 +49,7 @@ const RegisterForm = (props: Props) => {
         </TextField>
       </div>
 
-      <Button class="w-full mt-6" type="submit">
+      <Button class="w-full mt-6" type="submit" disabled={loggingIn.pending}>
         Create Account
       </Button>
     </form>

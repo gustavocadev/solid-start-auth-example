@@ -2,6 +2,7 @@ import { MailIcon, EyeOffIcon, EyeIcon } from 'lucide-solid';
 import { TextField, TextFieldInput, TextFieldLabel } from '../ui/text-field';
 import { Button } from '../ui/button';
 import { loginOrRegister } from '~/api/auth';
+import { useSubmission } from '@solidjs/router';
 
 type Props = {
   showPassword: boolean;
@@ -10,7 +11,7 @@ type Props = {
 
 const LoginForm = (props: Props) => {
   const showPassword = () => props.showPassword;
-  const setShowPassword = props.setShowPassword;
+  const loggingIn = useSubmission(loginOrRegister);
   return (
     <form action={loginOrRegister} method="post">
       <input type="hidden" name="intent" value="login" />
@@ -37,7 +38,7 @@ const LoginForm = (props: Props) => {
           />
         </TextField>
       </div>
-      <Button class="w-full mt-6" type="submit">
+      <Button class="w-full mt-6" type="submit" disabled={loggingIn.pending}>
         Sign In
       </Button>
     </form>
