@@ -38,6 +38,8 @@ export const loginOrRegister = action(async (formData: FormData) => {
   let error = validateUsername(username) || validatePassword(password);
   if (error) return new Error(error);
 
+  await new Promise((resolve) => setTimeout(resolve, 1000));
+
   try {
     const user = await (loginType !== 'login'
       ? register(username, password)
