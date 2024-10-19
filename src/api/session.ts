@@ -1,7 +1,7 @@
 import { useSession } from 'vinxi/http';
 import { eq } from 'drizzle-orm';
 import { db } from './db';
-import { Users } from '../../drizzle/schema';
+import { userTable } from '../../drizzle/schema';
 
 const sessionSecret =
   process.env.SESSION_SECRET ?? 'areallylongsecretthatyoushouldreplace';
@@ -23,8 +23,8 @@ export function getSession() {
 export async function login(username: string, password: string) {
   const user = await db
     .select()
-    .from(Users)
-    .where(eq(Users.username, username))
+    .from(userTable)
+    .where(eq(userTable.username, username))
     .get();
 
   if (!user || password !== user.password) throw new Error('Invalid login');
@@ -35,13 +35,13 @@ export async function login(username: string, password: string) {
 export async function register(username: string, password: string) {
   const existingUser = await db
     .select()
-    .from(Users)
-    .where(eq(Users.username, username))
+    .from(userTable)
+    .where(eq(userTable.username, username))
     .get();
 
   if (existingUser) throw new Error('User already exists');
 
-  return db.insert(Users).values({ username, password }).returning().get();
+  return db.insert(userTable).values({ username, password }).returning().get();
 }
 
 export function validateUsername(username: unknown) {
@@ -59,4 +59,10 @@ export function validatePassword(password: unknown) {
 export async function getUserId() {
   const session = await getSession();
   const userId = session.data.userId;
+
+  if (!userId || typeof userId !== 'number') {
+    return null;
+  }
+
+  return userId;
 }
